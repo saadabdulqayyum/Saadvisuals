@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saad Abdul Qayyum | Halal Video Editor for Doctors</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif'],
+            space: ['Space Grotesk', 'sans-serif'],
+          },
+          colors: {
+            neon: {
+              pink: '#FF2E63',
+              cyan: '#08D9D6',
+              yellow: '#FFD700',
+              purple: '#A855F7',
+              orange: '#FF6B35',
+              lime: '#B8F200',
+            }
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'float-delayed': 'float 6s ease-in-out 2s infinite',
+            'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+            'gradient-x': 'gradientX 8s ease infinite',
+            'spin-slow': 'spin 12s linear infinite',
+            'bounce-slow': 'bounce 3s infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-20px)' },
+            },
+            pulseGlow: {
+              '0%, 100%': { boxShadow: '0 0 20px rgba(255,46,99,0.4)' },
+              '50%': { boxShadow: '0 0 40px rgba(255,46,99,0.8), 0 0 60px rgba(8,217,214,0.4)' },
+            },
+            gradientX: {
+              '0%, 100%': { backgroundPosition: '0% 50%' },
+              '50%': { backgroundPosition: '100% 50%' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #0a0a1a;
+      overflow-x: hidden;
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, #FF2E63, #FFD700, #08D9D6, #A855F7, #FF6B35);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientX 6s ease infinite;
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, #1a0533 0%, #0d1b4c 25%, #1a0a2e 50%, #0a1628 75%, #1a0533 100%);
+      background-size: 400% 400%;
+      animation: gradientX 15s ease infinite;
+    }
+    .card-gradient {
+      background: linear-gradient(145deg, rgba(255,46,99,0.15), rgba(8,217,214,0.1), rgba(168,85,247,0.15));
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(20px);
+    }
+    .card-gradient:hover {
+      border-color: rgba(255,46,99,0.5);
+      box-shadow: 0 0 40px rgba(255,46,99,0.2), 0 0 80px rgba(8,217,214,0.1);
+      transform: translateY(-8px) scale(1.02);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #FF2E63, #A855F7, #08D9D6);
+      background-size: 200% 200%;
+      transition: all 0.4s ease;
+    }
+    .btn-primary:hover {
+      background-position: 100% 0;
+      box-shadow: 0 0 30px rgba(255,46,99,0.6), 0 0 60px rgba(168,85,247,0.3);
+      transform: translateY(-3px) scale(1.05);
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid transparent;
+      background-image: linear-gradient(#0a0a1a, #0a0a1a), linear-gradient(135deg, #FF2E63, #08D9D6, #FFD700);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      transition: all 0.4s ease;
+    }
+    .btn-secondary:hover {
+      box-shadow: 0 0 25px rgba(8,217,214,0.5);
+      transform: translateY(-3px);
+    }
+    .nav-blur {
+      background: rgba(10,10,26,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .video-card {
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      overflow: hidden;
+    }
+    .video-card:hover {
+      transform: translateY(-12px) scale(1.03);
+    }
+    .video-card:hover .play-overlay {
+      opacity: 1;
+    }
+    .video-card:hover .thumb-img {
+      transform: scale(1.1);
+    }
+    .play-overlay {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      background: linear-gradient(135deg, rgba(255,46,99,0.85), rgba(168,85,247,0.85));
+    }
+    .thumb-img {
+      transition: transform 0.6s ease;
+    }
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #FF2E63, #08D9D6);
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+    .stat-number {
+      background: linear-gradient(135deg, #FF2E63, #FFD700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .timeline-dot {
+      box-shadow: 0 0 0 4px rgba(255,46,99,0.3), 0 0 20px rgba(255,46,99,0.5);
+    }
+    .form-input {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #FF2E63;
+      box-shadow: 0 0 20px rgba(255,46,99,0.3);
+      background: rgba(255,255,255,0.08);
+    }
+    .tag {
+      background: linear-gradient(135deg, rgba(255,46,99,0.2), rgba(8,217,214,0.2));
+      border: 1px solid rgba(255,46,99,0.3);
+    }
+    .halal-badge {
+      background: linear-gradient(135deg, #10B981, #08D9D6);
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+    .mobile-menu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+    .mobile-menu.open {
+      max-height: 400px;
+    }
+    .testimonial-card {
+      transition: all 0.4s ease;
+    }
+    .testimonial-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 20px 60px rgba(168,85,247,0.25);
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0a0a1a; }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #FF2E63, #A855F7);
+      border-radius: 4px;
+    }
+    .blob {
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      animation: blobMorph 8s ease-in-out infinite;
+    }
+    @keyframes blobMorph {
+      0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+      25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
+      50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
+      75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; }
+    }
+    .filter-btn.active {
+      background: linear-gradient(135deg, #FF2E63, #A855F7);
+      border-color: transparent;
+      box-shadow: 0 0 20px rgba(255,46,99,0.4);
+    }
+  </style>
+</head>
+<body class="font-poppins text-white">
+
+  <!-- Navbar -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-blur transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <a href="#home" class="flex items-center gap-3 group">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-neon-pink via-neon-purple to-neon-cyan flex items-center justify-center text-lg font-bold shadow-lg group-hover:scale-110 transition-transform">
+            SQ
+          </div>
+          <div>
+            <span class="font-space font-bold text-lg tracking-tight">Saad AQ</span>
+            <span class="hidden sm:inline text-xs text-neon-cyan ml-2 font-medium">Halal Editor</span>
+          </div>
+        </a>
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#home" class="text-sm font-medium text-gray-300 hover:text-neon-pink transition-colors">Home</a>
+          <a href="#about" class="text-sm font-medium text-gray-300 hover:text-neon-cyan transition-colors">About</a>
+          <a href="#services" class="text-sm font-medium text-gray-300 hover:text-neon-yellow transition-colors">Services</a>
+          <a href="#portfolio" class="text-sm font-medium text-gray-300 hover:text-neon-purple transition-colors">Work</a>
+          <a href="#testimonials" class="text-sm font-medium text-gray-300 hover:text-neon-orange transition-colors">Reviews</a>
+          <a href="#contact" class="btn-primary px-6 py-2.5 rounded-full text-sm font-semibold">Let's Talk</a>
+        </div>
+        <button id="menuBtn" class="md:hidden w-10 h-10 flex items-center justify-center rounded-lg bg-white/5 border border-white/10">
+          <i class="fas fa-bars text-lg"></i>
+        </button>
+      </div>
+      <div id="mobileMenu" class="mobile-menu md:hidden">
+        <div class="py-4 space-y-3 border-t border-white/5">
+          <a href="#home" class="block px-2 py-2 text-gray-300 hover:text-neon-pink">Home</a>
+          <a href="#about" class="block px-2 py-2 text-gray-300 hover:text-neon-cyan">About</a>
+          <a href="#services" class="block px-2 py-2 text-gray-300 hover:text-neon-yellow">Services</a>
+          <a href="#portfolio" class="block px-2 py-2 text-gray-300 hover:text-neon-purple">Work</a>
+          <a href="#testimonials" class="block px-2 py-2 text-gray-300 hover:text-neon-orange">Reviews</a>
+          <a href="#contact" class="block btn-primary text-center px-6 py-3 rounded-full text-sm font-semibold mt-2">Let's Talk</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero-gradient relative min-h-screen flex items-center pt-20 overflow-hidden">
+    <div class="orb w-96 h-96 bg-neon-pink top-20 -left-32 animate-float"></div>
+    <div class="orb w-80 h-80 bg-neon-cyan bottom-20 -right-20 animate-float-delayed"></div>
+    <div class="orb w-64 h-64 bg-neon-purple top-1/2 left-1/2 -translate-x-1/2 opacity-30"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="space-y-8">
+          <div class="inline-flex items-center gap-2 halal-badge px-4 py-1.5 rounded-full text-sm font-semibold text-white shadow-lg">
+            <i class="fas fa-check-circle"></i>
+            100% Halal • No Music Ever
+          </div>
+          <h1 class="font-space text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1]">
+            <span class="text-white">Saad Abdul</span><br>
+            <span class="gradient-text">Qayyum</span>
+          </h1>
+          <p class="text-xl sm:text-2xl text-gray-300 font-light leading-relaxed">
+            I craft <span class="text-neon-cyan font-semibold">powerful medical videos</span> exclusively for doctors — clean, ethical, and completely music-free.
+          </p>
+          <p class="text-gray-400 text-base max-w-lg">
+            Specializing in patient education, clinic branding, surgical highlights, and doctor personal brands. Every frame respects your values.
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <a href="#portfolio" class="btn-primary px-8 py-4 rounded-full font-semibold text-base inline-flex items-center gap-2">
+              <i class="fas fa-play-circle"></i> View My Work
+            </a>
+            <a href="#contact" class="btn-secondary px-8 py-4 rounded-full font-semibold text-base inline-flex items-center gap-2">
+              <i class="fas fa-paper-plane"></i> Hire Me
+            </a>
+          </div>
+          <div class="flex flex-wrap gap-6 pt-4">
+            <div class="flex items-center gap-2">
+              <div class="w-10 h-10 rounded-full bg-neon-pink/20 flex items-center justify-center">
+                <i class="fas fa-stethoscope text-neon-pink"></i>
+              </div>
+              <span class="text-sm text-gray-400">Doctors Only</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-10 h-10 rounded-full bg-neon-cyan/20 flex items-center justify-center">
+                <i class="fas fa-volume-mute text-neon-cyan"></i>
+              </div>
+              <span class="text-sm text-gray-400">Zero Music</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-10 h-10 rounded-full bg-neon-yellow/20 flex items-center justify-center">
+                <i class="fas fa-bolt text-neon-yellow"></i>
+              </div>
+              <span class="text-sm text-gray-400">Fast Turnaround</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="relative hidden lg:flex items-center justify-center">
+          <div class="relative w-full max-w-md aspect-square">
+            <div class="absolute inset-0 blob bg-gradient-to-br from-neon-pink/40 via-neon-purple/30 to-neon-cyan/40 animate-spin-slow"></div>
+            <div class="absolute inset-8 rounded-3xl card-gradient flex flex-col items-center justify-center p-8 shadow-2xl">
+              <div class="w-28 h-28 rounded-full bg-gradient-to-br from-neon-pink to-neon-purple flex items-center justify-center mb-6 shadow-xl animate-pulse-glow">
+                <i class="fas fa-video text-4xl"></i>
+              </div>
+              <h3 class="font-space text-2xl font-bold mb-2">Video Editor</h3>
+              <p class="text-gray-400 text-center text-sm mb-6">Crafting stories that heal & inspire — without a single music note</p>
+              <div class="flex gap-3">
+                <span class="tag px-3 py-1 rounded-full text-xs font-medium">Premiere Pro</span>
+                <span class="tag px-3 py-1 rounded-full text-xs font-medium">After Effects</span>
+                <span class="tag px-3 py-1 rounded-full text-xs font-medium">DaVinci</span>
+              </div>
+            </div>
+            <!-- Floating badges -->
+            <div class="absolute -top-4 -right-4 bg-gradient-to-r from-neon-yellow to-neon-orange px-4 py-2 rounded-2xl shadow-lg animate-float text-sm font-bold text-gray-900">
+              <i class="fas fa-star"></i> 50+ Doctors
+            </div>
+            <div class="absolute -bottom-2 -left-6 bg-gradient-to-r from-neon-cyan to-neon-lime px-4 py-2 rounded-2xl shadow-lg animate-float-delayed text-sm font-bold text-gray-900">
+              <i class="fas fa-heart"></i> Halal Certified
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce-slow">
+      <a href="#about" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-gray-400 hover:text-white hover:border-neon-pink transition-colors">
+        <i class="fas fa-chevron-down"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <section class="relative z-10 -mt-4">
+    <div class="max-w-5xl mx-auto px-4">
+      <div class="card-gradient rounded-2xl p-6 sm:p-8 grid grid-cols-2 md:grid-cols-4 gap-6 shadow-2xl">
+        <div class="text-center">
+          <div class="stat-number font-space text-3xl sm:text-4xl font-bold">150+</div>
+          <div class="text-gray-400 text-sm mt-1">Videos Delivered</div>
+        </div>
+        <div class="text-center">
+          <div class="stat-number font-space text-3xl sm:text-4xl font-bold">50+</div>
+          <div class="text-gray-400 text-sm mt-1">Doctor Clients</div>
+        </div>
+        <div class="text-center">
+          <div class="stat-number font-space text-3xl sm:text-4xl font-bold">100%</div>
+          <div class="text-gray-400 text-sm mt-1">Music-Free</div>
+        </div>
+        <div class="text-center">
+          <div class="stat-number font-space text-3xl sm:text-4xl font-bold">4.9★</div>
+          <div class="text-gray-400 text-sm mt-1">Client Rating</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-24 relative">
+    <div class="orb w-72 h-72 bg-neon-purple/30 top-0 right-0"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <span class="text-neon-pink font-semibold text-sm tracking-widest uppercase">Who I Am</span>
+        <h2 class="font-space text-4xl sm:text-5xl font-bold mt-3 section-title">About Saad</h2>
+      </div>
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="space-y-6">
+          <h3 class="font-space text-2xl sm:text-3xl font-bold leading-snug">
+            Editing with <span class="gradient-text">purpose, integrity & energy</span>
+          </h3>
+          <p class="text-gray-300 leading-relaxed text-lg">
+            Assalamu Alaikum! I'm Saad Abdul Qayyum — a passionate video editor who exclusively serves the medical community. My mission is simple: help doctors communicate better through powerful, ethical video content.
+          </p>
+          <p class="text-gray-400 leading-relaxed">
+            I made a conscious choice early on: <strong class="text-neon-cyan">no music, ever</strong>. Every project I deliver is 100% halal — relying on clean sound design, natural ambient audio, voiceovers, and visual storytelling that captivates without compromising faith.
+          </p>
+          <p class="text-gray-400 leading-relaxed">
+            From patient education explainers to clinic promotional reels and surgical procedure highlights, I understand the unique needs of healthcare professionals. Your reputation and values are safe with me.
+          </p>
+          <div class="grid grid-cols-2 gap-4 pt-4">
+            <div class="card-gradient rounded-xl p-4 flex items-start gap-3">
+              <div class="w-10 h-10 rounded-lg bg-neon-pink/20 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-mosque text-neon-pink"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-sm">Faith-First</h4>
+                <p class="text-gray-400 text-xs mt-1">Halal principles guide every edit</p>
+              </div>
+            </div>
+            <div class="card-gradient rounded-xl p-4 flex items-start gap-3">
+              <div class="w-10 h-10 rounded-lg bg-neon-cyan/20 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-user-md text-neon-cyan"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-sm">Doctors Only</h4>
+                <p class="text-gray-400 text-xs mt-1">Specialized medical focus</p>
+              </div>
+            </div>
+            <div class="card-gradient rounded-xl p-4 flex items-start gap-3">
+              <div class="w-10 h-10 rounded-lg bg-neon-yellow/20 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-magic text-neon-yellow"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-sm">Visual Storytelling</h4>
+                <p class="text-gray-400 text-xs mt-1">Emotion without music</p>
+              </div>
+            </div>
+            <div class="card-gradient rounded-xl p-4 flex items-start gap-3">
+              <div class="w-10 h-10 rounded-lg bg-neon-purple/20 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-rocket text-neon-purple"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-sm">Fast & Reliable</h4>
+                <p class="text-gray-400 text-xs mt-1">On-time, every time</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="card-gradient rounded-3xl p-8 space-y-6">
+            <h4 class="font-space text-xl font-bold flex items-center gap-2">
+              <i class="fas fa-quote-left text-neon-pink"></i> My Promise
+            </h4>
+            <div class="space-y-5">
+              <div class="flex gap-4">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-neon-pink to-neon-orange flex items-center justify-center flex-shrink-0 text-sm font-bold">1</div>
+                <div>
+                  <h5 class="font-semibold">No Music, No Compromise</h5>
+                  <p class="text-gray-400 text-sm mt-1">I use SFX, ambient sounds, and powerful voiceovers instead of any musical tracks.</p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-neon-cyan to-neon-lime flex items-center justify-center flex-shrink-0 text-sm font-bold text-gray-900">2</div>
+                <div>
+                  <h5 class="font-semibold">Medical Expertise Focus</h5>
+                  <p class="text-gray-400 text-sm mt-1">I only work with doctors & healthcare brands — your niche is my specialty.</p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-neon-purple to-neon-pink flex items-center justify-center flex-shrink-0 text-sm font-bold">3</div>
+                <div>
+                  <h5 class="font-semibold">Vibrant & Professional</h5>
+                  <p class="text-gray-400 text-sm mt-1">High-energy visuals that grab attention while staying clinically credible.</p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-neon-yellow to-neon-orange flex items-center justify-center flex-shrink-0 text-sm font-bold text-gray-900">4</div>
+                <div>
+                  <h5 class="font-semibold">Unlimited Revisions</h5>
+                  <p class="text-gray-400 text-sm mt-1">Your vision, perfected. I revise until you're 100% thrilled.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="py-24 relative overflow-hidden">
+    <div class="orb w-96 h-96 bg-neon-pink/20 -bottom-20 -left-20"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <span class="text-neon-cyan font-semibold text-sm tracking-widest uppercase">What I Offer</span>
+        <h2 class="font-space text-4xl sm:text-5xl font-bold mt-3 section-title">Services</h2>
+        <p class="text-gray-400 mt-6 max-w-2xl mx-auto">Purpose-built video solutions for doctors who want to educate, inspire, and grow — the halal way.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Service 1 -->
+        <div class="card-gradient rounded-2xl p-8 transition-all duration-500 group cursor-default">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-neon-pink to-neon-orange flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+            <i class="fas fa-chalkboard-teacher text-2xl"></i>
+          </div>
+          <h3 class="font-space text-xl font-bold mb-3">Patient Education Videos</h3>
+          <p class="text-gray-400 text-sm leading-relaxed mb-4">Clear, engaging explainers that help patients understand procedures, conditions, and treatments — without jargon or music.</p>
+          <ul class="space-y-2 text-sm text-gray-500">
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-cyan text-xs"></i> Condition explainers</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-cyan text-xs"></i> Pre/post-op guides</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-cyan text-xs"></i> Animated diagrams</li>
+          </ul>
+        </div>
+        <!-- Service 2 -->
+        <div class="card-gradient rounded-2xl p-8 transition-all duration-500 group cursor-default">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-neon-cyan to-neon-lime flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+            <i class="fas fa-hospital text-2xl text-gray-900"></i>
+          </div>
+          <h3 class="font-space text-xl font-bold mb-3">Clinic & Practice Branding</h3>
+          <p class="text-gray-400 text-sm leading-relaxed mb-4">Showcase your clinic's atmosphere, team, and values with polished promotional videos that build trust instantly.</p>
+          <ul class="space-y-2 text-sm text-gray-500">
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-pink text-xs"></i> Clinic tour videos</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-pink text-xs"></i> Team introductions</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-pink text-xs"></i> Brand story films</li>
+          </ul>
+        </div>
+        <!-- Service 3 -->
+        <div class="card-gradient rounded-2xl p-8 transition-all duration-500 group cursor-default">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-neon-purple to-neon-pink flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+            <i class="fas fa-user-tie text-2xl"></i>
+          </div>
+          <h3 class="font-space text-xl font-bold mb-3">Doctor Personal Brand</h3>
+          <p class="text-gray-400 text-sm leading-relaxed mb-4">Position yourself as a trusted authority with LinkedIn, Instagram, and YouTube content tailored for medical professionals.</p>
+          <ul class="space-y-2 text-sm text-gray-500">
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-yellow text-xs"></i> Talking-head edits</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-yellow text-xs"></i> Social media reels</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-yellow text-xs"></i> Podcast clips</li>
+          </ul>
+        </div>
+        <!-- Service 4 -->
+        <div class="card-gradient rounded-2xl p-8 transition-all duration-500 group cursor-default">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-neon-yellow to-neon-orange flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+            <i class="fas fa-procedures text-2xl text-gray-900"></i>
+          </div>
+          <h3 class="font-space text-xl font-bold mb-3">Surgical Highlights</h3>
+          <p class="text-gray-400 text-sm leading-relaxed mb-4">Professionally edited procedure footage for conferences, teaching, or patient education — precise and respectful.</p>
+          <ul class="space-y-2 text-sm text-gray-500">
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-cyan text-xs"></i> Procedure compilations</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-cyan text-xs"></i> Teaching modules</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-cyan text-xs"></i> Conference presentations</li>
+          </ul>
+        </div>
+        <!-- Service 5 -->
+        <div class="card-gradient rounded-2xl p-8 transition-all duration-500 group cursor-default">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-neon-lime to-neon-cyan flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+            <i class="fas fa-ad text-2xl text-gray-900"></i>
+          </div>
+          <h3 class="font-space text-xl font-bold mb-3">Medical Ads & Promos</h3>
+          <p class="text-gray-400 text-sm leading-relaxed mb-4">High-converting promotional videos for services, special offers, and awareness campaigns — ethical and effective.</p>
+          <ul class="space-y-2 text-sm text-gray-500">
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-pink text-xs"></i> Service promotions</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-pink text-xs"></i> Health campaigns</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-pink text-xs"></i> Event coverage</li>
+          </ul>
+        </div>
+        <!-- Service 6 -->
+        <div class="card-gradient rounded-2xl p-8 transition-all duration-500 group cursor-default">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-neon-orange to-neon-pink flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+            <i class="fas fa-closed-captioning text-2xl"></i>
+          </div>
+          <h3 class="font-space text-xl font-bold mb-3">Subtitles & Localization</h3>
+          <p class="text-gray-400 text-sm leading-relaxed mb-4">Multi-language captions and clean subtitle design so your message reaches every patient community clearly.</p>
+          <ul class="space-y-2 text-sm text-gray-500">
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-yellow text-xs"></i> Multi-language subs</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-yellow text-xs"></i> Styled captions</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-neon-yellow text-xs"></i> Accessibility focus</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio -->
+  <section id="portfolio" class="py-24 relative">
+    <div class="orb w-80 h-80 bg-neon-cyan/20 top-40 right-0"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <span class="text-neon-yellow font-semibold text-sm tracking-widest uppercase">Selected Work</span>
+        <h2 class="font-space text-4xl sm:text-5xl font-bold mt-3 section-title">Portfolio</h2>
+        <p class="text-gray-400 mt-6 max-w-2xl mx-auto">A glimpse of the medical stories I've helped doctors tell — all music-free, all impactful.</p>
+      </div>
+      
+      <!-- Filters -->
+      <div class="flex flex-wrap justify-center gap-3 mb-12">
+        <button class="filter-btn active px-5 py-2 rounded-full text-sm font-medium border border-white/10 transition-all" data-filter="all">All Work</button>
+        <button class="filter-btn px-5 py-2 rounded-full text-sm font-medium border border-white/10 hover:border-neon-pink transition-all" data-filter="education">Education</button>
+        <button class="filter-btn px-5 py-2 rounded-full text-sm font-medium border border-white/10 hover:border-neon-cyan transition-all" data-filter="branding">Branding</button>
+        <button class="filter-btn px-5 py-2 rounded-full text-sm font-medium border border-white/10 hover:border-neon-purple transition-all" data-filter="social">Social</button>
+        <button class="filter-btn px-5 py-2 rounded-full text-sm font-medium border border-white/10 hover:border-neon-yellow transition-all" data-filter="surgical">Surgical</button>
+      </div>
+
+      <div id="portfolioGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Project 1 -->
+        <div class="video-card portfolio-item rounded-2xl overflow-hidden card-gradient" data-category="education">
+          <div class="relative aspect-video overflow-hidden">
+            <div class="thumb-img w-full h-full bg-gradient-to-br from-pink-600 via-purple-600 to-indigo-700 flex items-center justify-center">
+              <div class="text-center p-4">
+                <i class="fas fa-heartbeat text-5xl opacity-40 mb-2"></i>
+                <p class="text-sm font-medium opacity-60">Patient Education</p>
+              </div>
+            </div>
+            <div class="play-overlay absolute inset-0 flex items-center justify-center">
+              <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur flex items-center justify-center border border-white/30">
+                <i class="fas fa-play text-2xl ml-1"></i>
+              </div>
+            </div>
+            <span class="absolute top-3 left-3 tag px-3 py-1 rounded-full text-xs font-semibold">Education</span>
+            <span class="absolute top-3 right-3 bg-green-500/80 px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+              <i class="fas fa-volume-mute text-[10px]"></i> No Music
+            </span>
+          </div>
+          <div class="p-5">
+            <h3 class="font-space font-bold text-lg mb-1">Understanding Diabetes Type 2</h3>
+            <p class="text-gray-400 text-sm">Animated explainer for Dr. Fatima's clinic — 3.2 min patient guide</p>
+            <div class="flex items-center gap-3 mt-3 text-xs text-gray-500">
+              <span><i class="fas fa-clock mr-1"></i> 3:15</span>
+              <span><i class="fas fa-eye mr-1"></i> 12K views</span>
+            </div>
+          </div>
+        </div>
+        <!-- Project 2 -->
+        <div class="video-card portfolio-item rounded-2xl overflow-hidden card-gradient" data-category="branding">
+          <div class="relative aspect-video overflow-hidden">
+            <div class="thumb-img w-full h-full bg-gradient-to-br from-cyan-500 via-teal-500 to-emerald-600 flex items-center justify-center">
+              <div class="text-center p-4">
+                <i class="fas fa-clinic-medical text-5xl opacity-40 mb-2"></i>
+                <p class="text-sm font-medium opacity-60">Clinic Branding</p>
+              </div>
+            </div>
+            <div class="play-overlay absolute inset-0 flex items-center justify-center">
+              <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur flex items-center justify-center border border-white/30">
+                <i class="fas fa-play text-2xl ml-1"></i>
+              </div>
+            </div>
+            <span class="absolute top-3 left-3 tag px-3 py-1 rounded-full text-xs font-semibold">Branding</span>
+            <span class="absolute top-3 right-3 bg-green-500/80 px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+              <i class="fas fa-volume-mute text-[10px]"></i> No Music
+            </span>
+          </div>
+          <div class="p-5">
+            <h3 class="font-space font-bold text-lg mb-1">Al-Shifa Dental Clinic Tour</h3>
+            <p class="text-gray-400 text-sm">Warm, welcoming facility showcase with natural ambient sound</p>
+            <div class="flex items-center gap-3 mt-3 text-xs text-gray-500">
+              <span><i class="fas fa-clock mr-1"></i> 1:45</span>
+              <span><i class="fas fa-eye mr-1"></i> 8.5K views</span>
+            </div>
+          </div>
+        </div>
+        <!-- Project 3 -->
+        <div class="video-card portfolio-item rounded-2xl overflow-hidden card-gradient" data-category="social">
+          <div class="relative aspect-video overflow-hidden">
+            <div class="thumb-img w-full h-full bg-gradient-to-br from-orange-500 via-red-500 to-pink-600 flex items-center justify-center">
+              <div class="text-center p-4">
+                <i class="fas fa-mobile-alt text-5xl opacity-40 mb-2"></i>
+                <p class="text-sm font-medium opacity-60">Social Reels</p>
+              </div>
+            </div>
+            <div class="play-overlay absolute inset-0 flex items-center justify-center">
+              <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur flex items-center justify-center border border-white/30">
+                <i class="fas fa-play text-2xl ml-1"></i>
+              </div>
+            </div>
+            <span class="absolute top-3 left-3 tag px-3 py-1 rounded-full text-xs font-semibold">Social</span>
+            <span class="absolute top-3 right-3 bg-green-500/80 px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+              <i class="fas fa-volume-mute text-[10px]"></i> No Music
+            </span>
+          </div>
+          <div class="p-5">
+            <h3 class="font-space font-bold text-lg mb-1">5 Heart Health Tips Series</h3>
+            <p class="text-gray-400 text-sm">Viral Instagram reel series for a cardiologist — 5 episodes</p>
+            <div class="flex items-center gap-3 mt-3 text-xs text-gray-500">
+              <span><i class="fas fa-clock mr-1"></i> 0:45 ea</span>
+              <span><i class="fas fa-eye mr-1"></i> 45K views</span>
+            </div>
+          </div>
+        </div>
+        <!-- Project 4 -->
+        <div class="video-card portfolio-item rounded-2xl overflow-hidden card-gradient" data-category="surgical">
+          <div class="relative aspect-video overflow-hidden">
+            <div class="thumb-img w-full h-full bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-700 flex items-center justify-center">
+              <div class="text-center p-4">
+                <i class="fas fa-syringe text-5xl opacity-40 mb-2"></i>
+                <p class="text-sm font-medium opacity-60">Surgical Edit</p>
+              </div>
+            </div>
+            <div class="play-overlay absolute inset-0 flex items-center justify-center">
+              <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur flex items-center justify-center border border-white/30">
+                <i class="fas fa-play text-2xl ml-1"></i>
+              </div>
+            </div>
+            <span class="absolute top-3 left-3 tag px-3 py-1 rounded-full text-xs font-semibold">Surgical</span>
+            <span class="absolute top-3 right-3 bg-green-500/80 px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+              <i class="fas fa-volume-mute text-[10px]"></i> No Music
+            </span>
+          </div>
+          <div class="p-5">
+            <h3 class="font-space font-bold text-lg mb-1">Laparoscopic Cholecystectomy</h3>
+            <p class="text-gray-400 text-sm">Teaching video for surgical residents with annotated steps</p>
+            <div class="flex items-center gap-3 mt-3 text-xs text-gray-500">
+              <span><i class="fas fa-clock mr-1"></i> 8:20</span>
+              <span><i class="fas fa-eye mr-1"></i> Conference</span>
+            </div>
+          </div>
+        </div>
+        <!-- Project 5 -->
+        <div class="video-card portfolio-item rounded-2xl overflow-hidden card-gradient" data-category="branding">
+          <div class="relative aspect-video overflow-hidden">
+            <div class="thumb-img w-full h-full bg-gradient-to-br from-amber-500 via-yellow-500 to-lime-500 flex items-center justify-center">
+              <div class="text-center p-4">
+                <i class="fas fa-user-md text-5xl opacity-40 mb-2 text-gray-900"></i>
+                <p class="text-sm font-medium opacity-60 text-gray-900">Personal Brand</p>
+              </div>
+            </div>
+            <div class="play-overlay absolute inset-0 flex items-center justify-center">
+              <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur flex items-center justify-center border border-white/30">
+                <i class="fas fa-play text-2xl ml-1"></i>
+              </div>
+            </div>
+            <span class="absolute top-3 left-3 tag px-3 py-1 rounded-full text-xs font-semibold">Branding</span>
+            <span class="absolute top-3 right-3 bg-green-500/80 px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+              <i class="fas fa-volume-mute text-[10px]"></i> No Music
+            </span>
+          </div>
+          <div class="p-5">
+            <h3 class="font-space font-bold text-lg mb-1">Dr. Ahmed — Origin Story</h3>
+            <p class="text-gray-400 text-sm">Emotional brand film for a pediatrician's personal brand launch</p>
+            <div class="flex items-center gap-3 mt-3 text-xs text-gray-500">
+              <span><i class="fas fa-clock mr-1"></i> 2:30</span>
+              <span><i class="fas fa-eye mr-1"></i> 22K views</span>
+            </div>
+          </div>
+        </div>
+        <!-- Project 6 -->
+        <div class="video-card portfolio-item rounded-2xl overflow-hidden card-gradient" data-category="education">
+          <div class="relative aspect-video overflow-hidden">
+            <div class="thumb-img w-full h-full bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700 flex items-center justify-center">
+              <div class="text-center p-4">
+                <i class="fas fa-baby text-5xl opacity-40 mb-2"></i>
+                <p class="text-sm font-medium opacity-60">Education</p>
+              </div>
+            </div>
+            <div class="play-overlay absolute inset-0 flex items-center justify-center">
+              <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur flex items-center justify-center border border-white/30">
+                <i class="fas fa-play text-2xl ml-1"></i>
+              </div>
+            </div>
+            <span class="absolute top-3 left-3 tag px-3 py-1 rounded-full text-xs font-semibold">Education</span>
+            <span class="absolute top-3 right-3 bg-green-500/80 px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+              <i class="fas fa-volume-mute text-[10px]"></i> No Music
+            </span>
+          </div>
+          <div class="p-5">
+            <h3 class="font-space font-bold text-lg mb-1">Prenatal Care Essentials</h3>
+            <p class="text-gray-400 text-sm">Multi-part series for an OB-GYN practice — Arabic & English subs</p>
+            <div class="flex items-center gap-3 mt-3 text-xs text-gray-500">
+              <span><i class="fas fa-clock mr-1"></i> 4:00 ea</span>
+              <span><i class="fas fa-eye mr-1"></i> 31K views</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="py-24 relative overflow-hidden">
+    <div class="orb w-72 h-72 bg-neon-yellow/15 bottom-0 left-1/3"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <span class="text-neon-orange font-semibold text-sm tracking-widest uppercase">How It Works</span>
+        <h2 class="font-space text-4xl sm:text-5xl font-bold mt-3 section-title">Simple Process</h2>
+      </div>
+      <div class="grid md:grid-cols-4 gap-8 relative">
+        <div class="hidden md:block absolute top-10 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-neon-pink via-neon-cyan to-neon-yellow opacity-30"></div>
+        <div class="text-center relative">
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-neon-pink to-neon-orange flex items-center justify-center mx-auto mb-5 shadow-lg timeline-dot relative z-10">
+            <i class="fas fa-comments text-2xl"></i>
+          </div>
+          <h3 class="font-space font-bold text-lg mb-2">1. Discovery Call</h3>
+          <p class="text-gray-400 text-sm">We discuss your goals, audience, and vision. Free 20-min consultation.</p>
+        </div>
+        <div class="text-center relative">
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-neon-cyan to-neon-lime flex items-center justify-center mx-auto mb-5 shadow-lg timeline-dot relative z-10">
+            <i class="fas fa-file-alt text-2xl text-gray-900"></i>
+          </div>
+          <h3 class="font-space font-bold text-lg mb-2">2. Script & Plan</h3>
+          <p class="text-gray-400 text-sm">I craft a content plan and shot list tailored to your medical message.</p>
+        </div>
+        <div class="text-center relative">
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-neon-purple to-neon-pink flex items-center justify-center mx-auto mb-5 shadow-lg timeline-dot relative z-10">
+            <i class="fas fa-cut text-2xl"></i>
+          </div>
+          <h3 class="font-space font-bold text-lg mb-2">3. Edit & Polish</h3>
+          <p class="text-gray-400 text-sm">Cinematic edits with clean SFX, captions, and zero music. Preview shared.</p>
+        </div>
+        <div class="text-center relative">
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-neon-yellow to-neon-orange flex items-center justify-center mx-auto mb-5 shadow-lg timeline-dot relative z-10">
+            <i class="fas fa-rocket text-2xl text-gray-900"></i>
+          </div>
+          <h3 class="font-space font-bold text-lg mb-2">4. Deliver & Launch</h3>
+          <p class="text-gray-400 text-sm">Final files in all formats you need. Ready to educate and inspire.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials" class="py-24 relative">
+    <div class="orb w-96 h-96 bg-neon-purple/20 -top-20 -right-20"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <span class="text-neon-pink font-semibold text-sm tracking-widest uppercase">Client Love</span>
+        <h2 class="font-space text-4xl sm:text-5xl font-bold mt-3 section-title">What Doctors Say</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="testimonial-card card-gradient rounded-2xl p-8">
+          <div class="flex gap-1 mb-4">
+            <i class="fas fa-star text-neon-yellow"></i>
+            <i class="fas fa-star text-neon-yellow"></i>
+            <i class="fas fa-star text-neon-yellow"></i>
+            <i class="fas fa-star text-neon-yellow"></i>
+            <i class="fas fa-star text-neon-yellow"></i>
+          </div>
+          <p class="text-gray-300 text-sm leading-relaxed mb-6">"Saad understood exactly what I needed. My patient education videos are now clear, professional, and completely free of music — which was non-negotiable for me. My patients love them!"</p>
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-neon-pink to-neon-purple flex items-center justify-center font-bold text-sm">FK</div>
+            <div>
+              <h4 class="font-semibold text-sm">Dr. Fatima Khan</h4>
+              <p class="text-gray-500 text-xs">Endocrinologist</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card card-gradient rounded-2xl p-8">
+          <div class="flex gap-1 mb-4">
+            <i class="fas fa-star text-neon-yellow"></i>
+            <i class="fas fa-star text-neon-yellow"></i>
+            <i class="fas fa-star text-neon-yellow"></i>
+            <i class="fas fa-star text-neon-yellow"></i>
+            <i class="fas fa-star text-neon-yellow"></i>
+          </div>
+          <p class="text-gray-300 text-sm leading-relaxed mb-6">"The clinic tour video Saad produced brought in more appointment bookings than any ad campaign we've run. The energy is vibrant yet professional. Highly recommended for any Muslim doctor."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-neon-cyan to-neon-lime flex items-center justify-center font-bold text-sm text-gray-900">AR</div>
+            <div>
+              <h4 class="font-semibold text-sm">Dr. Ahmed Raza</h4>
+              <p class="text-gray-500 text-xs">Dental Surgeon</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card card-gradient rounded-2xl p-8">
+          <div class="flex gap-1 mb-4">
+            <i class="fas fa-star text-neon-yellow"></i>
+            <i class="fas fa-star text-neon-yellow"></i>
+            <i class="fas fa-star text-neon-yellow"></i>
+            <i class="fas fa-star text-neon-yellow"></i>
+            <i class="fas fa-star text-neon-yellow"></i>
+          </div>
+          <p class="text-gray-300 text-sm leading-relaxed mb-6">"Finding an editor who refuses to use music was incredibly hard until I found Saad. His sound design and visual storytelling are so strong you never miss the music. Pure talent with solid values."</p>
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-neon-orange to-neon-yellow flex items-center justify-center font-bold text-sm text-gray-900">SH</div>
+            <div>
+              <h4 class="font-semibold text-sm">Dr. Sara Hassan</h4>
+              <p class="text-gray-500 text-xs">Cardiologist</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="py-16">
+    <div class="max-w-5xl mx-auto px-4">
+      <div class="relative rounded-3xl overflow-hidden p-10 sm:p-16 text-center" style="background: linear-gradient(135deg, #FF2E63 0%, #A855F7 40%, #08D9D6 100%);">
+        <div class="absolute inset-0 opacity-20" style="background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"40\" fill=\"none\" stroke=\"white\" stroke-width=\"0.5\"/></svg>') center/30px;"></div>
+        <h2 class="font-space text-3xl sm:text-4xl font-bold mb-4 relative z-10">Ready to Elevate Your Medical Content?</h2>
+        <p class="text-white/80 max-w-xl mx-auto mb-8 relative z-10">Join 50+ doctors who trust Saad for vibrant, halal, music-free video editing that educates and converts.</p>
+        <a href="#contact" class="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-full font-bold text-base hover:scale-105 transition-transform shadow-xl relative z-10">
+          <i class="fas fa-calendar-check"></i> Book a Free Call
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="py-24 relative">
+    <div class="orb w-80 h-80 bg-neon-pink/20 bottom-0 left-0"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <span class="text-neon-cyan font-semibold text-sm tracking-widest uppercase">Get In Touch</span>
+        <h2 class="font-space text-4xl sm:text-5xl font-bold mt-3 section-title">Let's Create Together</h2>
+        <p class="text-gray-400 mt-6 max-w-xl mx-auto">Tell me about your project. I typically respond within 12 hours.</p>
+      </div>
+      <div class="grid lg:grid-cols-5 gap-10">
+        <div class="lg:col-span-2 space-y-6">
+          <div class="card-gradient rounded-2xl p-6 flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-neon-pink/20 flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-envelope text-neon-pink"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold mb-1">Email</h4>
+              <a href="mailto:saad@halaledits.com" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">saad@halaledits.com</a>
+            </div>
+          </div>
+          <div class="card-gradient rounded-2xl p-6 flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-neon-cyan/20 flex items-center justify-center flex-shrink-0">
+              <i class="fab fa-whatsapp text-neon-cyan text-xl"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold mb-1">WhatsApp</h4>
+              <a href="https://wa.me/1234567890" class="text-gray-400 text-sm hover:text-neon-cyan transition-colors">+1 (234) 567-890</a>
+            </div>
+          </div>
+          <div class="card-gradient rounded-2xl p-6 flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-neon-purple/20 flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-clock text-neon-purple"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold mb-1">Availability</h4>
+              <p class="text-gray-400 text-sm">Mon–Sat · 9 AM – 8 PM (GMT+5)</p>
+            </div>
+          </div>
+          <div class="card-gradient rounded-2xl p-6">
+            <h4 class="font-semibold mb-3">Follow Along</h4>
+            <div class="flex gap-3">
+              <a href="#" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-neon-pink/20 hover:border-neon-pink transition-all"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-neon-cyan/20 hover:border-neon-cyan transition-all"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-neon-yellow/20 hover:border-neon-yellow transition-all"><i class="fab fa-youtube"></i></a>
+              <a href="#" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-neon-purple/20 hover:border-neon-purple transition-all"><i class="fab fa-behance"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-3">
+          <form id="contactForm" class="card-gradient rounded-2xl p-8 space-y-5" onsubmit="handleSubmit(event)">
+            <div class="grid sm:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Your Name *</label>
+                <input type="text" required class="form-input w-full px-4 py-3 rounded-xl text-white placeholder-gray-500" placeholder="Dr. John Smith">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Email *</label>
+                <input type="email" required class="form-input w-full px-4 py-3 rounded-xl text-white placeholder-gray-500" placeholder="doctor@clinic.com">
+              </div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Specialty</label>
+                <select class="form-input w-full px-4 py-3 rounded-xl text-white">
+                  <option value="" class="bg-gray-900">Select specialty</option>
+                  <option value="gp" class="bg-gray-900">General Practice</option>
+                  <option value="cardio" class="bg-gray-900">Cardiology</option>
+                  <option value="dental" class="bg-gray-900">Dental</option>
+                  <option value="ortho" class="bg-gray-900">Orthopedics</option>
+                  <option value="pedia" class="bg-gray-900">Pediatrics</option>
+                  <option value="derma" class="bg-gray-900">Dermatology</option>
+                  <option value="other" class="bg-gray-900">Other</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Project Type</label>
+                <select class="form-input w-full px-4 py-3 rounded-xl text-white">
+                  <option value="" class="bg-gray-900">Select type</option>
+                  <option value="education" class="bg-gray-900">Patient Education</option>
+                  <option value="branding" class="bg-gray-900">Clinic Branding</option>
+                  <option value="personal" class="bg-gray-900">Personal Brand</option>
+                  <option value="surgical" class="bg-gray-900">Surgical Highlights</option>
+                  <option value="ads" class="bg-gray-900">Ads & Promos</option>
+                  <option value="other" class="bg-gray-900">Other</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Tell me about your project *</label>
+              <textarea required rows="5" class="form-input w-full px-4 py-3 rounded-xl text-white placeholder-gray-500 resize-none" placeholder="Describe your vision, timeline, and any specific requirements..."></textarea>
+            </div>
+            <div class="flex items-start gap-3">
+              <input type="checkbox" id="halalConfirm" checked class="mt-1 accent-pink-500 w-4 h-4">
+              <label for="halalConfirm" class="text-sm text-gray-400">I understand all videos are produced without music (halal editing standards).</label>
+            </div>
+            <button type="submit" class="btn-primary w-full py-4 rounded-xl font-semibold text-base flex items-center justify-center gap-2">
+              <i class="fas fa-paper-plane"></i> Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+        <div class="sm:col-span-2">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-pink via-neon-purple to-neon-cyan flex items-center justify-center text-sm font-bold">SQ</div>
+            <span class="font-space font-bold text-lg">Saad Abdul Qayyum</span>
+          </div>
+          <p class="text-gray-400 text-sm max-w-sm leading-relaxed">Halal video editing exclusively for doctors. Vibrant visuals. Zero music. Maximum impact.</p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-300">Quick Links</h4>
+          <div class="space-y-2">
+            <a href="#about" class="block text-gray-400 text-sm hover:text-neon-pink transition-colors">About</a>
+            <a href="#services" class="block text-gray-400 text-sm hover:text-neon-cyan transition-colors">Services</a>
+            <a href="#portfolio" class="block text-gray-400 text-sm hover:text-neon-yellow transition-colors">Portfolio</a>
+            <a href="#contact" class="block text-gray-400 text-sm hover:text-neon-purple transition-colors">Contact</a>
+          </div>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-300">Values</h4>
+          <div class="space-y-2 text-sm text-gray-400">
+            <p class="flex items-center gap-2"><i class="fas fa-check-circle text-neon-cyan text-xs"></i> 100% Music-Free</p>
+            <p class="flex items-center gap-2"><i class="fas fa-check-circle text-neon-pink text-xs"></i> Doctors Exclusive</p>
+            <p class="flex items-center gap-2"><i class="fas fa-check-circle text-neon-yellow text-xs"></i> Halal Standards</p>
+            <p class="flex items-center gap-2"><i class="fas fa-check-circle text-neon-purple text-xs"></i> Unlimited Revisions</p>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-gray-500 text-sm">© 2025 Saad Abdul Qayyum. All rights reserved.</p>
+        <p class="text-gray-500 text-sm flex items-center gap-2">
+          Made with <i class="fas fa-heart text-neon-pink"></i> and zero music
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Success Modal -->
+  <div id="successModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/70 backdrop-blur-sm">
+    <div class="card-gradient rounded-3xl p-10 max-w-md mx-4 text-center shadow-2xl transform scale-95 transition-transform" id="modalContent">
+      <div class="w-20 h-20 rounded-full bg-gradient-to-br from-neon-cyan to-neon-lime flex items-center justify-center mx-auto mb-6">
+        <i class="fas fa-check text-3xl text-gray-900"></i>
+      </div>
+      <h3 class="font-space text-2xl font-bold mb-3">Message Sent!</h3>
+      <p class="text-gray-400 mb-6">JazakAllah Khair! I'll get back to you within 12 hours. Looking forward to creating something amazing together.</p>
+      <button onclick="closeModal()" class="btn-primary px-8 py-3 rounded-full font-semibold">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+      const icon = menuBtn.querySelector('i');
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-times');
+    });
+
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        menuBtn.querySelector('i').classList.add('fa-bars');
+        menuBtn.querySelector('i').classList.remove('fa-times');
+      });
+    });
+
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.style.boxShadow = '0 4px 30px rgba(0,0,0,0.3)';
+      } else {
+        navbar.style.boxShadow = 'none';
+      }
+    });
+
+    // Portfolio filter
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const portfolioItems = document.querySelectorAll('.portfolio-item');
+    
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        
+        portfolioItems.forEach(item => {
+          if (filter === 'all' || item.dataset.category === filter) {
+            item.style.display = 'block';
+            item.style.animation = 'fadeIn 0.5s ease';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Contact form
+    function handleSubmit(e) {
+      e.preventDefault();
+      const modal = document.getElementById('successModal');
+      const content = document.getElementById('modalContent');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      setTimeout(() => { content.style.transform = 'scale(1)'; }, 10);
+      e.target.reset();
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('successModal');
+      const content = document.getElementById('modalContent');
+      content.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }, 200);
+    }
+
+    // Smooth reveal on scroll
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.card-gradient, .video-card, .testimonial-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+
+    // Counter animation for stats
+    function animateCounters() {
+      document.querySelectorAll('.stat-number').forEach(stat => {
+        const text = stat.textContent;
+        const hasPlus = text.includes('+');
+        const hasStar = text.includes('★');
+        const hasPercent = text.includes('%');
+        let target = parseFloat(text.replace(/[^0-9.]/g, ''));
+        let current = 0;
+        const increment = target / 60;
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            current = target;
+            clearInterval(timer);
+          }
+          let display = hasStar ? current.toFixed(1) + '★' : Math.floor(current).toString();
+          if (hasPlus) display += '+';
+          if (hasPercent) display += '%';
+          stat.textContent = display;
+        }, 25);
+      });
+    }
+
+    const statsSection = document.querySelector('.stat-number');
+    if (statsSection) {
+      const statsObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          animateCounters();
+          statsObserver.disconnect();
+        }
+      }, { threshold: 0.5 });
+      statsObserver.observe(statsSection.closest('section') || statsSection.parentElement.parentElement);
+    }
+  </script>
+</body>
+</html>
